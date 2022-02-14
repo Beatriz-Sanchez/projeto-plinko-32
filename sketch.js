@@ -7,8 +7,9 @@ var plinkos = [];
 var divisions =[];
 var ball;
 //crie a variável de estado de jogo e dê um valor inicial a ela
-
+var estado = "jogar";
 //crie a variável contador e ajuste seu valor para 0; Elva vai contar quantas bolas o jogador já lançou
+var contador = 0;
 
 var divisionHeight=300;
 var score =0;
@@ -61,16 +62,34 @@ function draw() {
   ground.display();
 
   //faça com que o jogo se encerre se o contador chegar a 5. Coloque uma mensagem de Game OVer na tela
+  if (contador>=1){
+    estado = "fim";
+    textSize(100);
+    text("Game Over", 150, 470);
+  }
 
   /*
   atualize a pontuação de acordo com o número mostrado no espaço onde a bola caiu
   Se a bola estiver em uma posição y maior que 760, usar if else para:
-  - Se a posição x da bola for maior que 0 e menor que 300 -> 500 pontos.
-  - Se a posição x da bola é maior que 301 e menor que 600 -> 100 pontos.
-  - Se a posição x da bola é maior que 601 e menor que 800 -> 200 pontos
+  - Se a posição x da bola for menor que 300 -> 500 pontos.
+  - Se a posição x da bola é maior que 300 e menor que 600 -> 100 pontos.
+  - Se a posição x da bola é maior que 600 e menor que 800 -> 200 pontos
 
   *Assim que a pontuação for dada, fazer a bola ser nula
   */
+
+  if (ball!=null && ball.body.position.y > 700){
+    if(0 < ball.body.position.x && ball.body.position.x < 300){
+      score += 500;
+      ball = null;
+    } else if (300 < ball.body.position.x && ball.body.position.x < 600) {
+      score += 100;
+      ball = null;
+    } else if (600 < ball.body.position.x && ball.body.position.x < 800) {
+      score += 200;
+      ball = null;
+    }
+  }
 
   for (var i = 0; i < plinkos.length; i++) {
      plinkos[i].display();  
@@ -91,6 +110,9 @@ function draw() {
 function mousePressed() {
   // faça com que a bola só seja gerada se o estado de jogo estiver não for o de fim
   //aumente o contador de chanceas a cada vez que uma bola for gerada
-  ball=new Ball(mouseX, 10, 10, 10);  
+  if(estado !== "fim"){
+    ball=new Ball(mouseX, 10, 10, 10);
+    contador+=1;
+  }  
 }
 
